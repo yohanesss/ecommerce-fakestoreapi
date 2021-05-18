@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { useQuery } from "react-query";
+// Components
+import { Drawer, Badge, Grid } from "@material-ui/core";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
+// Styles
+import { Wrapper } from "./style";
+import { CartItemType } from "./types/Cart";
+import { getProducts } from "./api/products";
+import { Item } from "./components/Item";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export const App = () => {
+    const { data, isLoading, error } = useQuery<CartItemType[]>(
+        "product",
+        getProducts
+    );
 
-export default App;
+    const getTotalItems = () => {};
+
+    const handleAddToCart = (item: CartItemType) => {};
+
+    const handleRemoveFromCart = () => {};
+
+    if (isLoading) return <LinearProgress />;
+    if (error) return <div>Something went wrong...</div>;
+
+    return (
+        <Wrapper>
+            <Grid container spacing={3}>
+                {data?.map((item) => (
+                    <Grid key={item.id} item xs={12} sm={4}>
+                        <Item item={item} handleAddToCard={handleAddToCart} />
+                    </Grid>
+                ))}
+            </Grid>
+        </Wrapper>
+    );
+};
